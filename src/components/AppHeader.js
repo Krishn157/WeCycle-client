@@ -1,4 +1,10 @@
-import { cilBell, cilEnvelopeOpen, cilList, cilMenu } from "@coreui/icons";
+import {
+  cilBell,
+  cilEnvelopeOpen,
+  cilExitToApp,
+  cilList,
+  cilMenu,
+} from "@coreui/icons";
 import CIcon from "@coreui/icons-react";
 import {
   CButton,
@@ -23,6 +29,10 @@ import { NavLink } from "react-router-dom";
 
 const AppHeader = ({ toggleSideBar }) => {
   const [visible, setVisible] = useState(false);
+
+  const logOutHandler = () => {
+    localStorage.removeItem("userInfo");
+  };
   return (
     <>
       <CHeader position="sticky" className="mb-4">
@@ -35,7 +45,7 @@ const AppHeader = ({ toggleSideBar }) => {
             {/* <CIcon icon={logo} height={48} alt="Logo" /> */}
           </CHeaderBrand>
           <CHeaderNav className="d-none d-md-flex me-auto">
-            <CNavItem>
+            {/* <CNavItem>
               <CNavLink to="/dashboard" component={NavLink}>
                 Dashboard
               </CNavLink>
@@ -45,15 +55,18 @@ const AppHeader = ({ toggleSideBar }) => {
             </CNavItem>
             <CNavItem>
               <CNavLink href="#">Settings</CNavLink>
-            </CNavItem>
+            </CNavItem> */}
           </CHeaderNav>
           <CHeaderNav>
-            <CNavItem>
-              <CNavLink href="#">
-                <CIcon icon={cilBell} size="lg" />
-              </CNavLink>
-            </CNavItem>
-            <CNavItem>
+            <CIcon
+              icon={cilExitToApp}
+              className="log-out"
+              size="lg"
+              title="Log Out"
+              onClick={logOutHandler}
+            />
+
+            {/* <CNavItem>
               <CNavLink href="#">
                 <CIcon icon={cilList} size="lg" />
               </CNavLink>
@@ -62,7 +75,7 @@ const AppHeader = ({ toggleSideBar }) => {
               <CNavLink href="#">
                 <CIcon icon={cilEnvelopeOpen} size="lg" />
               </CNavLink>
-            </CNavItem>
+            </CNavItem> */}
           </CHeaderNav>
         </CContainer>
       </CHeader>

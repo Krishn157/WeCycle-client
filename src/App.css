@@ -49,3 +49,7 @@ input#session-date::-webkit-calendar-picker-indicator {
   position: absolute;
   transform: scale(12);
 }
+
+.log-out {
+  cursor: pointer;
+}

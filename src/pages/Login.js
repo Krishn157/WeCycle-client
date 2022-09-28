@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import {
   CButton,
   CCard,
@@ -15,14 +15,55 @@ import {
 } from "@coreui/react";
 import CIcon from "@coreui/icons-react";
 import { cilLockLocked, cilUser } from "@coreui/icons";
+import { gql, useMutation } from "@apollo/client";
+
+const signInMutation = gql`
+  mutation signIn($wasteUser: WasteUserInput!) {
+    wasteuserlogin(wasteUser: $wasteUser) {
+      id
+      email
+      org_Name
+      org_Desc
+      phone_No
+      type
+    }
+  }
+`;
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const navigate = useNavigate();
+  const [signInUser] = useMutation(signInMutation);
+  // const [userInfo, setUserInfo] = useState("");
 
-  const submitHandler = (e) => {
+  // useEffect(() => {
+  //   setUserInfo(localStorage.getItem("userInfo"));
+  //   console.log(userInfo);
+  //   if (userInfo) {
+  //     navigate("/");
+  //   }
+  // }, [navigate, userInfo]);
+
+  const submitHandler = async (e) => {
     e.preventDefault();
     console.log(email, password);
+    try {
+      const result = await signInUser({
+        variables: {
+          wasteUser: {
+            email,
+            password,
+          },
+        },
+      });
+      const data = result.data.wasteuserlogin[0];
+      console.log(data);
+      localStorage.setItem("userInfo", JSON.stringify(data));
+    } catch (error) {
+      console.log(error);
+      localStorage.removeItem("userInfo");
+    }
   };
 
   return (
