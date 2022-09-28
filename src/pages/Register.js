@@ -1,4 +1,4 @@
-import React from "react";
+import React , { useState } from "react";
 import {
   CButton,
   CCard,
@@ -16,6 +16,19 @@ import CIcon from "@coreui/icons-react";
 import { cilLockLocked, cilUser } from "@coreui/icons";
 
 const Register = () => {
+
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [type, setType] = useState("");
+  const [password, setPassword] = useState("");
+  const [cPassword, setCPassword] = useState("");
+
+  const submitHandler = (e) => {
+    e.preventDefault();
+    console.log(name, email, type, password, cPassword );
+  };
+  
+
   return (
     <div className="bg-light min-vh-100 d-flex flex-row align-items-center">
       <CContainer>
@@ -33,6 +46,8 @@ const Register = () => {
                     <CFormInput
                       placeholder="Organization Name"
                       autoComplete="username"
+                      value={name}
+                      onChange={(e) => setName(e.target.value)}
                     />
                   </CInputGroup>
                   <CInputGroup className="mb-3">
@@ -40,6 +55,9 @@ const Register = () => {
                     <CFormInput
                       placeholder="Organization Email"
                       autoComplete="email"
+                      type="email" //humne daala hai
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
                     />
                   </CInputGroup>
 
@@ -51,6 +69,7 @@ const Register = () => {
                       id="inlineCheckbox1"
                       value="Producer"
                       label="Producer"
+                      onClick = {()=>setType('Producer')}
                     />
                     <CFormCheck
                       inline
@@ -59,6 +78,7 @@ const Register = () => {
                       id="inlineCheckbox2"
                       value="Consumer"
                       label="Consumer"
+                      onClick = {()=>setType('Consumer')}
                     />
                   </CInputGroup>
                   <CInputGroup className="mb-3">
@@ -69,6 +89,8 @@ const Register = () => {
                       type="password"
                       placeholder="Password"
                       autoComplete="new-password"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
                     />
                   </CInputGroup>
                   <CInputGroup className="mb-4">
@@ -79,10 +101,12 @@ const Register = () => {
                       type="password"
                       placeholder="Repeat password"
                       autoComplete="new-password"
+                      value={cPassword}
+                      onChange={(e) => setCPassword(e.target.value)}
                     />
                   </CInputGroup>
                   <div className="d-grid">
-                    <CButton color="success">Create Account</CButton>
+                    <CButton color="success" onClick={submitHandler}>Create Account</CButton>
                   </div>
                 </CForm>
               </CCardBody>
