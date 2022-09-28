@@ -44,11 +44,7 @@ const DashBoard = () => {
   return (
     <CRow>
       <CCol xs={12}>
-        <DocsCallout
-          name="XYZ Organization"
-          href="components/chart"
-          content="XYZ organization was established in 1956, it has been a major contributor of solid wastes since then"
-        />
+        {user && <DocsCallout name={user.org_Name} content={user.org_Desc} />}
       </CCol>
       <CCol xs={6}>
         <CCard className="mb-4">

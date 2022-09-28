@@ -27,7 +27,7 @@ const _nav = [
   },
   {
     component: CNavTitle,
-    name: "Vendor",
+    name: "Producer Options",
   },
   {
     component: CNavItem,
@@ -37,7 +37,7 @@ const _nav = [
   },
   {
     component: CNavItem,
-    name: "Vendor List",
+    name: "Consumers List",
     to: "/vendors",
     icon: <CIcon icon={cilList} customClassName="nav-icon" />,
   },

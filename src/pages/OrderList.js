@@ -9,9 +9,7 @@ const OrderList = () => {
         <CCardHeader>
           <strong>Order Requests</strong>
         </CCardHeader>
-        <CCardBody>
-          <CustomTable />
-        </CCardBody>
+        <CCardBody>{/* <CustomTable /> */}</CCardBody>
       </CCard>
     </>
   );

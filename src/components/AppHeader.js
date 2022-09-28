@@ -20,6 +20,7 @@ import {
   CHeader,
   CHeaderBrand,
   CHeaderNav,
+  CHeaderText,
   CHeaderToggler,
   CNavItem,
   CNavLink,
@@ -30,7 +31,7 @@ import { useAuth } from "../contexts/authContext";
 
 const AppHeader = ({ toggleSideBar }) => {
   const [visible, setVisible] = useState(false);
-  const { deleteUserInfo } = useAuth();
+  const { deleteUserInfo, user } = useAuth();
 
   const logOutHandler = () => {
     deleteUserInfo("userInfo");
@@ -48,7 +49,12 @@ const AppHeader = ({ toggleSideBar }) => {
           <CHeaderBrand className="mx-auto d-md-none" to="/">
             {/* <CIcon icon={logo} height={48} alt="Logo" /> */}
           </CHeaderBrand>
-          <CHeaderNav className="d-none d-md-flex me-auto"></CHeaderNav>
+          {user && (
+            <CHeaderNav className="d-none d-md-flex me-auto">
+              {user.org_Name}
+            </CHeaderNav>
+          )}
+
           <CHeaderNav>
             <CIcon
               icon={cilExitToApp}
