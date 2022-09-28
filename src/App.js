@@ -1,9 +1,12 @@
 import {
   ApolloClient,
   ApolloProvider,
+  gql,
   HttpLink,
   InMemoryCache,
+  useQuery,
 } from "@apollo/client";
+import { useEffect } from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import "./App.css";
 import HomePage from "./pages/HomePage";
@@ -14,7 +17,7 @@ import "./scss/style.scss";
 const client = new ApolloClient({
   cache: new InMemoryCache(),
   link: new HttpLink({
-    uri: "http://localhost:5001/graphql",
+    uri: "https://localhost:5001/graphql",
   }),
   credentials: "same-origin",
 });

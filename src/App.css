@@ -36,3 +36,16 @@
     transform: rotate(360deg);
   }
 }
+
+input#session-date {
+  position: relative;
+  overflow: hidden;
+}
+input#session-date::-webkit-calendar-picker-indicator {
+  display: block;
+  top: 0;
+  left: 0;
+  background: #0000;
+  position: absolute;
+  transform: scale(12);
+}
