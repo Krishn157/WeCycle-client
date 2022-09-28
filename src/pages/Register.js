@@ -14,8 +14,20 @@ import {
 } from "@coreui/react";
 import CIcon from "@coreui/icons-react";
 import { cilLockLocked, cilUser } from "@coreui/icons";
+import { useEffect } from "react";
+import { useAuth } from "../contexts/authContext";
+import { useNavigate } from "react-router-dom";
 
 const Register = () => {
+  const { saveUserInfo, user } = useAuth();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    console.log(user);
+    if (user) {
+      navigate("/");
+    }
+  }, [navigate, user]);
   return (
     <div className="bg-light min-vh-100 d-flex flex-row align-items-center">
       <CContainer>

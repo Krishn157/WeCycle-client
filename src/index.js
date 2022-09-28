@@ -5,11 +5,12 @@ import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import "@coreui/coreui/dist/css/coreui.min.css";
 import "bootstrap/dist/css/bootstrap.min.css";
+import { AuthProvider } from "./contexts/authContext";
 
 ReactDOM.render(
-  <React.StrictMode>
+  <AuthProvider>
     <App />
-  </React.StrictMode>,
+  </AuthProvider>,
   document.getElementById("root")
 );
 

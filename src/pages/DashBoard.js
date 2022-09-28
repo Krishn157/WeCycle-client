@@ -18,9 +18,21 @@ import {
 import DocsCallout from "../components/DocsCallout";
 import { cibFacebook, cibGoogle, cibLinkedin, cibTwitter } from "@coreui/icons";
 import CIcon from "@coreui/icons-react";
+import { useAuth } from "../contexts/authContext";
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 const DashBoard = () => {
   const random = () => Math.round(Math.random() * 100);
+  const { user } = useAuth();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    console.log(user);
+    if (user && user.type === "Consumer") {
+      navigate("/dashboard-consumer");
+    }
+  }, [navigate, user]);
 
   const progressGroupExample3 = [
     { title: "Organic Search", icon: cibGoogle, percent: 56, value: "191,235" },

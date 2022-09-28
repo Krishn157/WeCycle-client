@@ -17,6 +17,7 @@ import "./App.css";
 import HomePage from "./pages/HomePage";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
+import { AuthProvider, useAuth } from "./contexts/authContext";
 import "./scss/style.scss";
 
 const client = new ApolloClient({
@@ -28,6 +29,21 @@ const client = new ApolloClient({
 });
 
 function App() {
+  const { saveUserInfo, user } = useAuth();
+
+  useEffect(() => {
+    if (user === null) {
+      const userInfo = window.localStorage.getItem("userInfo");
+      if (userInfo !== null) {
+        try {
+          saveUserInfo("userInfo", JSON.parse(userInfo));
+        } catch (err) {
+          console.log(err);
+        }
+      }
+    }
+  }, [saveUserInfo, user]);
+
   return (
     <ApolloProvider client={client}>
       <Router>

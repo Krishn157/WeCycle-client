@@ -16,6 +16,7 @@ import {
 import CIcon from "@coreui/icons-react";
 import { cilLockLocked, cilUser } from "@coreui/icons";
 import { gql, useMutation } from "@apollo/client";
+import { useAuth } from "../contexts/authContext";
 
 const signInMutation = gql`
   mutation signIn($wasteUser: WasteUserInput!) {
@@ -33,17 +34,16 @@ const signInMutation = gql`
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const navigate = useNavigate();
   const [signInUser] = useMutation(signInMutation);
-  // const [userInfo, setUserInfo] = useState("");
+  const { saveUserInfo, user } = useAuth();
+  const navigate = useNavigate();
 
-  // useEffect(() => {
-  //   setUserInfo(localStorage.getItem("userInfo"));
-  //   console.log(userInfo);
-  //   if (userInfo) {
-  //     navigate("/");
-  //   }
-  // }, [navigate, userInfo]);
+  useEffect(() => {
+    console.log(user);
+    if (user) {
+      navigate("/");
+    }
+  }, [navigate, user]);
 
   const submitHandler = async (e) => {
     e.preventDefault();
@@ -59,7 +59,8 @@ const Login = () => {
       });
       const data = result.data.wasteuserlogin[0];
       console.log(data);
-      localStorage.setItem("userInfo", JSON.stringify(data));
+      saveUserInfo("userInfo", data);
+      navigate("/");
     } catch (error) {
       console.log(error);
       localStorage.removeItem("userInfo");

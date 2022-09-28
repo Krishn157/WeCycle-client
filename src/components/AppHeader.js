@@ -26,13 +26,17 @@ import {
 } from "@coreui/react";
 import React, { useState } from "react";
 import { NavLink } from "react-router-dom";
+import { useAuth } from "../contexts/authContext";
 
 const AppHeader = ({ toggleSideBar }) => {
   const [visible, setVisible] = useState(false);
+  const { deleteUserInfo } = useAuth();
 
   const logOutHandler = () => {
-    localStorage.removeItem("userInfo");
+    deleteUserInfo("userInfo");
+    window.location.reload();
   };
+
   return (
     <>
       <CHeader position="sticky" className="mb-4">
@@ -44,19 +48,7 @@ const AppHeader = ({ toggleSideBar }) => {
           <CHeaderBrand className="mx-auto d-md-none" to="/">
             {/* <CIcon icon={logo} height={48} alt="Logo" /> */}
           </CHeaderBrand>
-          <CHeaderNav className="d-none d-md-flex me-auto">
-            {/* <CNavItem>
-              <CNavLink to="/dashboard" component={NavLink}>
-                Dashboard
-              </CNavLink>
-            </CNavItem>
-            <CNavItem>
-              <CNavLink href="#">Users</CNavLink>
-            </CNavItem>
-            <CNavItem>
-              <CNavLink href="#">Settings</CNavLink>
-            </CNavItem> */}
-          </CHeaderNav>
+          <CHeaderNav className="d-none d-md-flex me-auto"></CHeaderNav>
           <CHeaderNav>
             <CIcon
               icon={cilExitToApp}
@@ -65,17 +57,6 @@ const AppHeader = ({ toggleSideBar }) => {
               title="Log Out"
               onClick={logOutHandler}
             />
-
-            {/* <CNavItem>
-              <CNavLink href="#">
-                <CIcon icon={cilList} size="lg" />
-              </CNavLink>
-            </CNavItem>
-            <CNavItem>
-              <CNavLink href="#">
-                <CIcon icon={cilEnvelopeOpen} size="lg" />
-              </CNavLink>
-            </CNavItem> */}
           </CHeaderNav>
         </CContainer>
       </CHeader>

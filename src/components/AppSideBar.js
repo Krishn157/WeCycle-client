@@ -17,8 +17,10 @@ import "simplebar/dist/simplebar.min.css";
 import { AppSidebarNav } from "./AppSideBarNav";
 // sidebar nav config
 import navigation from "../_nav";
+import { useAuth } from "../contexts/authContext";
 
 const AppSideBar = ({ sideBarShow }) => {
+  const { user } = useAuth();
   return (
     <CSidebar position="fixed" visible={sideBarShow}>
       <CSidebarBrand>
