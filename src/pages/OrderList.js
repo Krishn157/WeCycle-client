@@ -14,6 +14,7 @@ const ORDERS = gql`
       primary_Substance
       quantity
       month
+      status
       prod_Id
       prod_Name
       request_Cons_Id
@@ -63,6 +64,7 @@ const OrderList = () => {
             tempObj["Quantity (in Tonnes)"] = data["quantity"];
             tempObj["Month"] = data["month"];
             tempObj["Requested To"] = data["request_Cons_Name"];
+            tempObj["Status"] = data["status"];
             contents = [...contents, tempObj];
           });
           setTableContents(contents);

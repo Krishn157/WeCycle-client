@@ -58,7 +58,7 @@ const NewOrder = () => {
     const orgName = data.consumers?.find(
       (consumer) => consumer.id === +plant
     )?.org_Name;
-    debugger;
+    // debugger;
     console.log(type, subs, quant, month, user.id, plant, orgName);
     try {
       const res = await createWaste({

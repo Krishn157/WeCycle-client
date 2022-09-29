@@ -1,9 +1,10 @@
-import { gql, useLazyQuery } from "@apollo/client";
+import { gql, useLazyQuery, useMutation } from "@apollo/client";
 import { CCard, CCardBody, CCardHeader } from "@coreui/react";
 import React from "react";
 import { useState } from "react";
 import { useEffect } from "react";
-import CustomTable from "../components/CustomTable";
+import { Navigate, useNavigate } from "react-router-dom";
+import CustomOptnsTable from "../components/CustomOptnsTable";
 import { useAuth } from "../contexts/authContext";
 
 const ORDERS = gql`
@@ -16,13 +17,36 @@ const ORDERS = gql`
       month
       prod_Id
       prod_Name
+      status
       request_Cons_Id
       request_Cons_Name
     }
   }
 `;
 
+const updateStatusMutation = gql`
+  mutation updateStat($waste: WasteInput!) {
+    updateStatus(waste: $waste) {
+      status
+      waste_Id
+    }
+  }
+`;
+
+const updateConsIdsMutation = gql`
+  mutation updateCons($waste: WasteInput!) {
+    updateConsId(waste: $waste) {
+      waste_Id
+      cons_Id
+      status
+    }
+  }
+`;
+
 const OrderReq = () => {
+  const [updateAccept] = useMutation(updateStatusMutation);
+  const [updateCons] = useMutation(updateConsIdsMutation);
+  const navigate = useNavigate();
   const headings = [
     "Sl No.",
     "Producer Name",
@@ -39,6 +63,41 @@ const OrderReq = () => {
   console.log(data);
   console.log(error);
 
+  const handleReject = async (id) => {
+    try {
+      const result = await updateAccept({
+        variables: {
+          waste: {
+            waste_Id: id,
+            status: "Rejected",
+          },
+        },
+      });
+      console.log(result);
+      window.location.reload();
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleAccept = async (id) => {
+    try {
+      const res = await updateCons({
+        variables: {
+          waste: {
+            waste_Id: id,
+            cons_Id: user.id,
+            status: "Accepted",
+          },
+        },
+      });
+      console.log(res);
+      navigate("/accept");
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   useEffect(() => {
     if (user) {
       const id = user.id;
@@ -54,15 +113,19 @@ const OrderReq = () => {
           apiData = res.data.wastebyreqconsid;
           let i = 1;
           apiData.forEach((data) => {
-            let tempObj = {};
-            tempObj["Sl No."] = i;
-            i = i + 1;
-            tempObj["Producer Name"] = data["prod_Name"];
-            tempObj["Type"] = data["type"];
-            tempObj["Primary Substance"] = data["primary_Substance"];
-            tempObj["Quantity (in Tonnes)"] = data["quantity"];
-            tempObj["Month"] = data["month"];
-            contents = [...contents, tempObj];
+            if (data["status"] === "Pending") {
+              let tempObj = {};
+              tempObj["Sl No."] = i;
+              i = i + 1;
+              tempObj["Producer Name"] = data["prod_Name"];
+              tempObj["Type"] = data["type"];
+              tempObj["Primary Substance"] = data["primary_Substance"];
+              tempObj["Quantity (in Tonnes)"] = data["quantity"];
+              tempObj["Month"] = data["month"];
+              tempObj["id"] = data["waste_Id"];
+              tempObj["status"] = data["status"];
+              contents = [...contents, tempObj];
+            }
           });
           setTableContents(contents);
         })
@@ -78,10 +141,12 @@ const OrderReq = () => {
           <strong>Order History</strong>
         </CCardHeader>
         <CCardBody>
-          <CustomTable
+          <CustomOptnsTable
             headings={headings}
             data={tableContents}
             title="Order Requets"
+            actionFunc={handleAccept}
+            cancelFunc={handleReject}
           />
         </CCardBody>
       </CCard>
