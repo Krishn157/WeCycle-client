@@ -118,13 +118,6 @@ const DashBoard = () => {
     }
   }, [navigate, user]);
 
-  const progressGroupExample3 = [
-    { title: "Organic Search", icon: cibGoogle, percent: 56, value: "191,235" },
-    { title: "Facebook", icon: cibFacebook, percent: 15, value: "51,223" },
-    { title: "Twitter", icon: cibTwitter, percent: 11, value: "37,564" },
-    { title: "LinkedIn", icon: cibLinkedin, percent: 8, value: "27,319" },
-  ];
-
   return (
     <CRow>
       <CCol xs={12}>
@@ -172,30 +165,6 @@ const DashBoard = () => {
           </CCardBody>
         </CCard>
       </CCol>
-
-      {/* <CCol xs={12}>
-        <CCard className="mb-4">
-          <CCardHeader>Total Waste Composition</CCardHeader>
-          <CCardBody>
-            <CChartDoughnut
-              data={{
-                labels: ["VueJs", "EmberJs", "ReactJs", "AngularJs"],
-                datasets: [
-                  {
-                    backgroundColor: [
-                      "#41B883",
-                      "#E46651",
-                      "#00D8FF",
-                      "#DD1B16",
-                    ],
-                    data: [40, 20, 80, 10],
-                  },
-                ],
-              }}
-            />
-          </CCardBody>
-        </CCard>
-      </CCol> */}
     </CRow>
   );
 };

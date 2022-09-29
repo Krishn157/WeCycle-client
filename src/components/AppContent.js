@@ -32,7 +32,7 @@ const AppContent = () => {
         <Route
           path="/dashboard-consumer"
           name="Consumer Dashboard"
-          element={getElement(DashBoard)}
+          element={getElement(DashBoardConsumer)}
         />
         <Route
           path="/vendors"
