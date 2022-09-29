@@ -1,4 +1,4 @@
-import { gql, useLazyQuery, useQuery } from "@apollo/client";
+import { gql, useLazyQuery } from "@apollo/client";
 import { CCard, CCardBody, CCardHeader } from "@coreui/react";
 import React from "react";
 import { useState } from "react";
@@ -7,8 +7,8 @@ import CustomTable from "../components/CustomTable";
 import { useAuth } from "../contexts/authContext";
 
 const ORDERS = gql`
-  query wasteByProd($prod_Id: Int!) {
-    wastebyprodid(prod_Id: $prod_Id) {
+  query wasteByCons($request_Cons_Id: Int!) {
+    wastebyreqconsid(request_Cons_Id: $request_Cons_Id) {
       waste_Id
       type
       primary_Substance
@@ -22,16 +22,16 @@ const ORDERS = gql`
   }
 `;
 
-const OrderList = () => {
+const OrderReq = () => {
   const headings = [
     "Sl No.",
+    "Producer Name",
     "Type",
     "Primary Substance",
     "Quantity (in Tonnes)",
     "Month",
-    "Requested To",
-    "Status",
   ];
+
   const { user } = useAuth();
   const [tableContents, setTableContents] = useState([]);
 
@@ -44,25 +44,24 @@ const OrderList = () => {
       const id = user.id;
       getOrders({
         variables: {
-          prod_Id: id,
+          request_Cons_Id: id,
         },
       })
         .then((res) => {
-          console.log(res.data.wastebyprodid);
+          console.log(res.data.wastebyreqconsid);
           let apiData = [];
           let contents = [];
-          apiData = res.data.wastebyprodid;
+          apiData = res.data.wastebyreqconsid;
           let i = 1;
           apiData.forEach((data) => {
             let tempObj = {};
             tempObj["Sl No."] = i;
             i = i + 1;
+            tempObj["Producer Name"] = data["prod_Name"];
             tempObj["Type"] = data["type"];
             tempObj["Primary Substance"] = data["primary_Substance"];
-            tempObj["Description"] = data["org_Desc"];
             tempObj["Quantity (in Tonnes)"] = data["quantity"];
             tempObj["Month"] = data["month"];
-            tempObj["Requested To"] = data["request_Cons_Name"];
             contents = [...contents, tempObj];
           });
           setTableContents(contents);
@@ -72,7 +71,6 @@ const OrderList = () => {
         });
     }
   }, [getOrders, user]);
-
   return (
     <>
       <CCard className="mb-4">
@@ -83,7 +81,7 @@ const OrderList = () => {
           <CustomTable
             headings={headings}
             data={tableContents}
-            title="Order List"
+            title="Order Requets"
           />
         </CCardBody>
       </CCard>
@@ -91,4 +89,4 @@ const OrderList = () => {
   );
 };
 
-export default OrderList;
+export default OrderReq;

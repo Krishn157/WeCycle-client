@@ -19,6 +19,20 @@ const CustomTable = ({ headings, data, title }) => {
       onRowClick={(evt, selectedRow) =>
         setSelectedRow(selectedRow.tableData.id)
       }
+      actions={[
+        {
+          icon: "check",
+          tooltip: "Accept Req",
+          onClick: (event, rowData) => alert("You saved " + rowData.name),
+        },
+        (rowData) => ({
+          icon: "cancel",
+          tooltip: "Reject Req",
+          onClick: (event, rowData) =>
+            alert("You want to delete " + rowData.name),
+          disabled: rowData.birthYear < 2000,
+        }),
+      ]}
       options={{
         exportButton: true,
         headerStyle: {
@@ -29,6 +43,7 @@ const CustomTable = ({ headings, data, title }) => {
           backgroundColor:
             selectedRow === rowData.tableData.id ? "#EEE" : "#FFF",
         }),
+        actionsColumnIndex: -1,
       }}
     />
   );

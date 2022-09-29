@@ -16,7 +16,7 @@ import SimpleBar from "simplebar-react";
 import "simplebar/dist/simplebar.min.css";
 import { AppSidebarNav } from "./AppSideBarNav";
 // sidebar nav config
-import navigation from "../_nav";
+import { _prodnav, _consnav } from "../_nav";
 import { useAuth } from "../contexts/authContext";
 
 const AppSideBar = ({ sideBarShow }) => {
@@ -28,7 +28,9 @@ const AppSideBar = ({ sideBarShow }) => {
       </CSidebarBrand>
       <CSidebarNav>
         <SimpleBar>
-          <AppSidebarNav items={navigation} />
+          <AppSidebarNav
+            items={user && user.type === "Producer" ? _prodnav : _consnav}
+          />
         </SimpleBar>
       </CSidebarNav>
       {/* <CSidebarToggler /> */}

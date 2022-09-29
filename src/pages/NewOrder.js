@@ -1,4 +1,4 @@
-import { gql, useQuery } from "@apollo/client";
+import { gql, useMutation, useQuery } from "@apollo/client";
 import {
   CButton,
   CCard,
@@ -9,19 +9,43 @@ import {
   CFormSelect,
   CRow,
 } from "@coreui/react";
-import React, {useState} from "react";
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../contexts/authContext";
 
-const USERS = gql`
-  query myquery {
-    wasteproducers {
+const CONSUMERS = gql`
+  query getConsumers {
+    consumers {
       id
-      first_Name
+      org_Name
+    }
+  }
+`;
+
+const createWasteMutation = gql`
+  mutation createWaste($waste: WasteInput!) {
+    createwaste(waste: $waste) {
+      waste_Id
+      type
+      primary_Substance
+      quantity
+      month
+      request_Cons_Id
+      prod_Id
+      cons_Id
+      prod_Name
+      request_Cons_Name
     }
   }
 `;
 
 const NewOrder = () => {
+  const navigate = useNavigate();
+  const { user } = useAuth();
+  const { loading, error, data = {} } = useQuery(CONSUMERS);
+  console.log(data.consumers);
 
+  const [createWaste] = useMutation(createWasteMutation);
 
   const [type, setType] = useState("");
   const [subs, setSubs] = useState("");
@@ -29,15 +53,45 @@ const NewOrder = () => {
   const [plant, setPlant] = useState("");
   const [month, setMonth] = useState("");
 
-  const submitHandler = (e) => {
+  const submitHandler = async (e) => {
     e.preventDefault();
-    console.log(type, subs, quant, plant, month );
+    const orgName = data.consumers?.find(
+      (consumer) => consumer.id === +plant
+    )?.org_Name;
+    debugger;
+    console.log(type, subs, quant, month, user.id, plant, orgName);
+    try {
+      const res = await createWaste({
+        variables: {
+          waste: {
+            type: type,
+            primary_Substance: subs,
+            quantity: +quant,
+            month: month,
+            prod_Id: user.id,
+            prod_Name: user.org_Name,
+            request_Cons_Id: +plant,
+            request_Cons_Name: orgName,
+          },
+        },
+      });
+      const data = res.data.createwaste;
+      console.log(data);
+      navigate("/order-list");
+    } catch (error) {
+      alert("Something went wrong");
+      console.log(error);
+    }
   };
 
+  const options =
+    data.consumers?.map((consumer) => {
+      const { id, org_Name } = consumer;
+      return { label: org_Name, value: id };
+    }) || [];
 
-  const { loading, error, data } = useQuery(USERS);
-  console.log(data);
-  console.log(error);
+  console.log("options", options);
+
   return (
     <>
       <CCard className="mb-4">
@@ -51,11 +105,12 @@ const NewOrder = () => {
                 aria-label="Select Waste Type"
                 options={[
                   "Select Waste Type",
-                  { label: "One", value: "1" },
-                  { label: "Two", value: "2" },
-                  { label: "Three", value: "3"},
+                  { label: "Type 1", value: "Type 1" },
+                  { label: "Type 2", value: "Type 2" },
+                  { label: "Type 3", value: "Type 3" },
+                  { label: "Type 4", value: "Type 4" },
                 ]}
-                onChange={e=> setType(e.target.value)}
+                onChange={(e) => setType(e.target.value)}
               />
             </CCol>
             <CCol xs={6}>
@@ -81,15 +136,13 @@ const NewOrder = () => {
             <CCol xs={6}>
               <CFormSelect
                 aria-label="Choose Processing Plant"
-                options={[
-                  "Choose Processing Plant",
-                  { label: "One", value: "1" },
-                  { label: "Two", value: "2" },
-                  { label: "Three", value: "3"},
-                ]}
-                onChange={e=> setPlant(e.target.value)
-                // onChange={(e, {value}) => setPlant(value)
-                } 
+                options={["Choose Processing Company", ...options]}
+                onChange={
+                  (e) => {
+                    setPlant(e.target.value);
+                  }
+                  // onChange={(e, {value}) => setPlant(value)
+                }
               />
             </CCol>
             <CCol xs={6}>
@@ -97,11 +150,20 @@ const NewOrder = () => {
                 aria-label="Month"
                 options={[
                   "Choose Month",
-                  { label: "One", value: "1" },
-                  { label: "Two", value: "2" },
-                  { label: "Three", value: "3"},
+                  { label: "January", value: "January" },
+                  { label: "February", value: "February" },
+                  { label: "March", value: "March" },
+                  { label: "April", value: "April" },
+                  { label: "May", value: "May" },
+                  { label: "June", value: "June" },
+                  { label: "July", value: "July" },
+                  { label: "August", value: "August" },
+                  { label: "September", value: "Sptember" },
+                  { label: "October", value: "October" },
+                  { label: "November", value: "November" },
+                  { label: "December", value: "December" },
                 ]}
-                onChange={e=> setMonth(e.target.value)}
+                onChange={(e) => setMonth(e.target.value)}
               />
             </CCol>
             <CCol xs={6}>

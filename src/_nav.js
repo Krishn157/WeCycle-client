@@ -2,7 +2,9 @@ import React from "react";
 import CIcon from "@coreui/icons-react";
 import {
   cibAddthis,
+  cibClockify,
   cilBell,
+  cilBook,
   cilCalculator,
   cilChartPie,
   cilCursor,
@@ -18,7 +20,7 @@ import {
 } from "@coreui/icons";
 import { CNavGroup, CNavItem, CNavTitle } from "@coreui/react";
 
-const _nav = [
+const _prodnav = [
   {
     component: CNavItem,
     name: "Dashboard",
@@ -47,13 +49,37 @@ const _nav = [
     to: "/order-list",
     icon: <CIcon icon={cilTruck} customClassName="nav-icon" />,
   },
+];
 
+const _consnav = [
   {
     component: CNavItem,
-    name: "Docs",
-    href: "https://coreui.io/react/docs/templates/installation/",
-    icon: <CIcon icon={cilDescription} customClassName="nav-icon" />,
+    name: "Dashboard",
+    to: "/dashboard-consumer",
+    icon: <CIcon icon={cilSpeedometer} customClassName="nav-icon" />,
+  },
+  {
+    component: CNavTitle,
+    name: "Consumer Options",
+  },
+  {
+    component: CNavItem,
+    name: "View Requests",
+    to: "order-req",
+    icon: <CIcon icon={cibClockify} customClassName="nav-icon" />,
+  },
+  {
+    component: CNavItem,
+    name: "Accepeted Requests",
+    to: "/accept",
+    icon: <CIcon icon={cilList} customClassName="nav-icon" />,
+  },
+  {
+    component: CNavItem,
+    name: "Energy Records",
+    to: "/energy-cons",
+    icon: <CIcon icon={cilBook} customClassName="nav-icon" />,
   },
 ];
 
-export default _nav;
+export { _consnav, _prodnav };
