@@ -56,7 +56,7 @@ const AcceptedReq = () => {
 
   const { user } = useAuth();
   const [tableContents, setTableContents] = useState([]);
-  const [energy, setEnergy] = useState(0);
+  const [energy, setEnergy] = useState([]);
   const navigate = useNavigate();
 
   const [getOrders, { loading, error, data }] = useLazyQuery(ORDERS);
@@ -94,7 +94,7 @@ const AcceptedReq = () => {
           let contents = [];
           apiData = res.data.wastebyreqconsid;
           let i = 1;
-          apiData.forEach((data) => {
+          apiData.forEach((data, index) => {
             if (data["status"] === "Accepted" && data["energy"] === 0) {
               let tempObj = {};
               tempObj["Sl No."] = i;
@@ -113,7 +113,7 @@ const AcceptedReq = () => {
                     placeholder="in Units"
                     aria-label="Energy"
                     size="sm"
-                    value={energy}
+                    value={energy[i]}
                     onChange={(e) => setEnergy(e.target.value)}
                   />
                   <br />
@@ -144,7 +144,7 @@ const AcceptedReq = () => {
     <>
       <CCard className="mb-4">
         <CCardHeader>
-          <strong>Accepeted Requests</strong>
+          <strong>Accepted Requests</strong>
         </CCardHeader>
         <CCardBody>
           <CustomTable
