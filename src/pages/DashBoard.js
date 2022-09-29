@@ -21,16 +21,100 @@ import CIcon from "@coreui/icons-react";
 import { useAuth } from "../contexts/authContext";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { gql, useLazyQuery } from "@apollo/client";
+import { useState } from "react";
+
+const WASTES = gql`
+  query lastprodwaste($prod_Id: Int!) {
+    lastwastebyprod(prod_Id: $prod_Id) {
+      waste_Id
+      prod_Id
+      month
+      quantity
+      energy
+    }
+  }
+`;
+
+const ENERGY = gql`
+  query lastprodwastenn($prod_Id: Int!) {
+    lastwastebyprodenn(prod_Id: $prod_Id) {
+      waste_Id
+      prod_Id
+      month
+      quantity
+      energy
+    }
+  }
+`;
 
 const DashBoard = () => {
+  const [getWastes, { loading, error, data }] = useLazyQuery(WASTES);
+  const [
+    getEnergy,
+    { loading: loadingEnergy, error: errorEnergy, data: energyData },
+  ] = useLazyQuery(ENERGY);
+  console.log(data);
+  console.log(energyData);
   const random = () => Math.round(Math.random() * 100);
   const { user } = useAuth();
   const navigate = useNavigate();
+  const [labels, setLabels] = useState([]);
+  const [bardata, setBarData] = useState([]);
+
+  const [energyLabels, setEnergyLabels] = useState([]);
+  const [linedata, setLineData] = useState([]);
 
   useEffect(() => {
     console.log(user);
     if (user && user.type === "Consumer") {
       navigate("/dashboard-consumer");
+    }
+    if (user) {
+      const id = user.id;
+      getWastes({
+        variables: {
+          prod_Id: id,
+        },
+      })
+        .then((res) => {
+          let apiData = [];
+          let contents = [];
+          let quant = [];
+          console.log(res.data.lastwastebyprod);
+          apiData = res.data.lastwastebyprod;
+          apiData.forEach((data) => {
+            contents.push(data["month"]);
+            quant.push(data["quantity"]);
+          });
+          setLabels(contents);
+          setBarData(quant);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+
+      getEnergy({
+        variables: {
+          prod_Id: id,
+        },
+      })
+        .then((res) => {
+          let apiData = [];
+          let contents = [];
+          let quant = [];
+          console.log(res.data.lastwastebyprodenn);
+          apiData = res.data.lastwastebyprodenn;
+          apiData.forEach((data) => {
+            contents.push(data["month"]);
+            quant.push(data["energy"]);
+          });
+          setEnergyLabels(contents);
+          setLineData(quant);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     }
   }, [navigate, user]);
 
@@ -52,20 +136,12 @@ const DashBoard = () => {
           <CCardBody>
             <CChartBar
               data={{
-                labels: [
-                  "January",
-                  "February",
-                  "March",
-                  "April",
-                  "May",
-                  "June",
-                  "July",
-                ],
+                labels: labels,
                 datasets: [
                   {
-                    label: "GitHub Commits",
+                    label: "Waste Produced",
                     backgroundColor: "#f87979",
-                    data: [40, 20, 12, 39, 10, 40, 39, 80, 40],
+                    data: bardata,
                   },
                 ],
               }}
@@ -80,31 +156,15 @@ const DashBoard = () => {
           <CCardBody>
             <CChartLine
               data={{
-                labels: [
-                  "January",
-                  "February",
-                  "March",
-                  "April",
-                  "May",
-                  "June",
-                  "July",
-                ],
+                labels: energyLabels,
                 datasets: [
                   {
-                    label: "My Second dataset",
+                    label: "Energy Produced",
                     backgroundColor: "rgba(151, 187, 205, 0.2)",
                     borderColor: "rgba(151, 187, 205, 1)",
                     pointBackgroundColor: "rgba(151, 187, 205, 1)",
                     pointBorderColor: "#fff",
-                    data: [
-                      random(),
-                      random(),
-                      random(),
-                      random(),
-                      random(),
-                      random(),
-                      random(),
-                    ],
+                    data: linedata,
                   },
                 ],
               }}
@@ -112,31 +172,8 @@ const DashBoard = () => {
           </CCardBody>
         </CCard>
       </CCol>
-      <CCol xs={6}>
-        <CCard className="mb-4">
-          <CCardHeader>Top Energy Producing Wastes</CCardHeader>
-          <CCardBody>
-            {progressGroupExample3.map((item, index) => (
-              <div className="progress-group" key={index}>
-                <div className="progress-group-header">
-                  <CIcon className="me-2" icon={item.icon} size="lg" />
-                  <span>{item.title}</span>
-                  <span className="ms-auto fw-semibold">
-                    {item.value}{" "}
-                    <span className="text-medium-emphasis small">
-                      ({item.percent}%)
-                    </span>
-                  </span>
-                </div>
-                <div className="progress-group-bars">
-                  <CProgress thin color="success" value={item.percent} />
-                </div>
-              </div>
-            ))}
-          </CCardBody>
-        </CCard>
-      </CCol>
-      <CCol xs={6}>
+
+      {/* <CCol xs={12}>
         <CCard className="mb-4">
           <CCardHeader>Total Waste Composition</CCardHeader>
           <CCardBody>
@@ -158,7 +195,7 @@ const DashBoard = () => {
             />
           </CCardBody>
         </CCard>
-      </CCol>
+      </CCol> */}
     </CRow>
   );
 };
