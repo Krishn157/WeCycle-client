@@ -10,6 +10,7 @@ import DashBoardConsumer from "../pages/DashBoardConsumer";
 import OrderReq from "../pages/OrderReq";
 import AcceptedReq from "../pages/AcceptedReq";
 import ConsEnergyRecords from "../pages/ConsEnergyRecords";
+import ProdEnergyRecords from "../pages/ProdEnergyRecords";
 
 const AppContent = () => {
   const getElement = (Component, redirectTo = "/login") => {
@@ -43,6 +44,7 @@ const AppContent = () => {
         <Route path="/order-req" element={getElement(OrderReq)} />
         <Route path="/accept" element={getElement(AcceptedReq)} />
         <Route path="/energy-cons" element={getElement(ConsEnergyRecords)} />
+        <Route path="/energy-prod" element={getElement(ProdEnergyRecords)} />
         <Route path="/" element={<Navigate to="/dashboard" replace />} />
       </Routes>
     </CContainer>

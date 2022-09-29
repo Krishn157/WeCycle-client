@@ -1,4 +1,4 @@
-import { gql, useLazyQuery, useMutation } from "@apollo/client";
+import { gql, useLazyQuery } from "@apollo/client";
 import { CCard, CCardBody, CCardHeader } from "@coreui/react";
 import React from "react";
 import { useEffect } from "react";
@@ -7,8 +7,8 @@ import CustomTable from "../components/CustomTable";
 import { useAuth } from "../contexts/authContext";
 
 const ORDERS = gql`
-  query wasteByCons($request_Cons_Id: Int!) {
-    wastebyreqconsid(request_Cons_Id: $request_Cons_Id) {
+  query wasteByProd($prod_Id: Int!) {
+    wastebyprodid(prod_Id: $prod_Id) {
       waste_Id
       type
       primary_Substance
@@ -24,10 +24,10 @@ const ORDERS = gql`
   }
 `;
 
-const ConsEnergyRecords = () => {
+const ProdEnergyRecords = () => {
   const headings = [
     "Sl No.",
-    "Producer Name",
+    "Consumer Name",
     "Type",
     "Primary Substance",
     "Quantity (in Tonnes)",
@@ -46,21 +46,21 @@ const ConsEnergyRecords = () => {
       const id = user.id;
       getOrders({
         variables: {
-          request_Cons_Id: id,
+          prod_Id: id,
         },
       })
         .then((res) => {
-          console.log(res.data.wastebyreqconsid);
+          console.log(res.data.wastebyprodid);
           let apiData = [];
           let contents = [];
-          apiData = res.data.wastebyreqconsid;
+          apiData = res.data.wastebyprodid;
           let i = 1;
           apiData.forEach((data) => {
             if (data["status"] === "Accepted" && data["energy"] > 0) {
               let tempObj = {};
               tempObj["Sl No."] = i;
               i = i + 1;
-              tempObj["Producer Name"] = data["prod_Name"];
+              tempObj["Consumer Name"] = data["cons_Name"];
               tempObj["Type"] = data["type"];
               tempObj["Primary Substance"] = data["primary_Substance"];
               tempObj["Quantity (in Tonnes)"] = data["quantity"];
@@ -97,4 +97,4 @@ const ConsEnergyRecords = () => {
   );
 };
 
-export default ConsEnergyRecords;
+export default ProdEnergyRecords;

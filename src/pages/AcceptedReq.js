@@ -1,4 +1,4 @@
-import { gql, useLazyQuery } from "@apollo/client";
+import { gql, useLazyQuery, useMutation } from "@apollo/client";
 import {
   CButton,
   CCard,
@@ -9,6 +9,7 @@ import {
 import React from "react";
 import { useEffect } from "react";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import CustomTable from "../components/CustomTable";
 import { useAuth } from "../contexts/authContext";
 
@@ -30,7 +31,19 @@ const ORDERS = gql`
   }
 `;
 
+const updateEnergyMutation = gql`
+  mutation uodate($waste: WasteInput!) {
+    updateEnergy(waste: $waste) {
+      waste_Id
+      status
+      cons_Id
+      energy
+    }
+  }
+`;
+
 const AcceptedReq = () => {
+  const [updateEnergy] = useMutation(updateEnergyMutation);
   const headings = [
     "Sl No.",
     "Producer Name",
@@ -43,9 +56,29 @@ const AcceptedReq = () => {
 
   const { user } = useAuth();
   const [tableContents, setTableContents] = useState([]);
+  const [energy, setEnergy] = useState(0);
+  const navigate = useNavigate();
 
   const [getOrders, { loading, error, data }] = useLazyQuery(ORDERS);
   console.log(data);
+
+  const submitHandler = async (id) => {
+    console.log(energy, id);
+    try {
+      const res = await updateEnergy({
+        variables: {
+          waste: {
+            waste_Id: id,
+            energy: +energy,
+          },
+        },
+      });
+      console.log(res.data);
+      navigate("/energy-cons");
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   useEffect(() => {
     if (user) {
@@ -80,9 +113,18 @@ const AcceptedReq = () => {
                     placeholder="in Units"
                     aria-label="Energy"
                     size="sm"
+                    value={energy}
+                    onChange={(e) => setEnergy(e.target.value)}
                   />
                   <br />
-                  <CButton color="primary" type="submit" size="sm">
+                  <CButton
+                    color="primary"
+                    type="submit"
+                    size="sm"
+                    onClick={() => {
+                      submitHandler(data.waste_Id);
+                    }}
+                  >
                     Enter
                   </CButton>
                 </>
@@ -96,7 +138,7 @@ const AcceptedReq = () => {
           console.log(err);
         });
     }
-  }, [getOrders, user]);
+  }, [energy, getOrders, user]);
 
   return (
     <>

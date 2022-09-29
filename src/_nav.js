@@ -49,6 +49,12 @@ const _prodnav = [
     to: "/order-list",
     icon: <CIcon icon={cilTruck} customClassName="nav-icon" />,
   },
+  {
+    component: CNavItem,
+    name: "Energy Records",
+    to: "/energy-prod",
+    icon: <CIcon icon={cilBook} customClassName="nav-icon" />,
+  },
 ];
 
 const _consnav = [
