@@ -108,7 +108,7 @@ const Register = () => {
           <CCol md={9} lg={7} xl={6}>
             <CCard className="mx-4">
               <CCardBody className="p-4">
-                <CForm>
+                <CForm onSubmit={submitHandler}>
                   <h1>Register</h1>
                   <p className="text-medium-emphasis">Create your account</p>
                   <CInputGroup className="mb-3">
@@ -120,6 +120,7 @@ const Register = () => {
                       autoComplete="username"
                       value={name}
                       onChange={(e) => setName(e.target.value)}
+                      required
                     />
                   </CInputGroup>
                   <CInputGroup className="mb-3">
@@ -130,6 +131,7 @@ const Register = () => {
                       type="email" //humne daala hai
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
+                      required
                     />
                   </CInputGroup>
 
@@ -143,6 +145,7 @@ const Register = () => {
                       type="tel" //humne daala hai
                       value={phone}
                       onChange={(e) => setPhone(e.target.value)}
+                      required
                     />
                   </CInputGroup>
 
@@ -156,6 +159,7 @@ const Register = () => {
                       type="text" //humne daala hai
                       value={desc}
                       onChange={(e) => setDesc(e.target.value)}
+                      required
                     />
                   </CInputGroup>
 
@@ -189,6 +193,7 @@ const Register = () => {
                       autoComplete="new-password"
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
+                      required
                     />
                   </CInputGroup>
                   <CInputGroup className="mb-4">
@@ -201,10 +206,11 @@ const Register = () => {
                       autoComplete="new-password"
                       value={cPassword}
                       onChange={(e) => setCPassword(e.target.value)}
+                      required
                     />
                   </CInputGroup>
                   <div className="d-grid">
-                    <CButton color="success" onClick={submitHandler}>
+                    <CButton color="primary" type="submit">
                       Create Account
                     </CButton>
                   </div>
